@@ -1,0 +1,194 @@
+:root {
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --bg-gradient: linear-gradient(135deg,#03dcf8 0%,#416cca 50%,#58bce4 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Background */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  color: #222;
+  overflow-x: hidden;
+}
+
+/* Decorative shapes */
+.shape-one, .shape-two {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+.shape-one {
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, #ffeb3b, #ff9800);
+  top: -100px; left: -100px;
+  box-shadow: 0 0 80px rgba(255,193,7,.6), 0 0 120px rgba(255,152,0,.5);
+}
+.shape-two {
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, #e0f7fa, #80deea);
+  bottom: -80px; right: -80px;
+  box-shadow: 0 0 70px rgba(128,222,234,.5), 0 0 110px rgba(0,188,212,.4);
+}
+
+/* Layout */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header */
+.header {
+  background: #fff;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -40px;
+  box-shadow: var(--shadow);
+  z-index: 2;
+}
+.header-icon {
+  width: 40px;
+  height: 40px;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* Pop animation when feedback changes */
+.feedback-pop {
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+
+
+/* Form */
+.form {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 60px 30px 30px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* gap: 3px; */
+  text-align: left;
+}
+.form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+.input-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #555;
+}
+.input-group input,
+.input-group textarea {
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #416cca;
+}
+
+/* Button */
+.submit-btn {
+  background: #121c3a;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 4px;
+}
+.submit-btn:hover {
+  background: #03dcf8;
+  color: #000;
+}
+
+/* Footer */
+.footer {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  font-size: 14px;
+  color: #fff;
+}
+.footer span {
+  color: #d7f33a;
+  font-weight: 600;
+}
+/* Error message styling with reserved space */
+.input-group span.error {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+  min-height: 18px;              /* <-- reserves space for error text */
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* When error is active */
+.input-group.error span.error {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Red underline for error inputs */
+.input-group.error input,
+.input-group.error textarea {
+  border-bottom: 2px solid #e74c3c;
+  transition: border-color 0.3s ease;
+}
+
+/* Prevent textarea resizing manually by user (optional) */
+textarea {
+  resize: none;
+}
+
+

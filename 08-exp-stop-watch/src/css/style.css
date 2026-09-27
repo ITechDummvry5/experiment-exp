@@ -1,0 +1,166 @@
+
+    :root {
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Background */
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #000000 0%, #3a0d0d 50%, #7f0000 100%);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Decorative shapes */
+    .shape-one,
+    .shape-two {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 0;
+      pointer-events: none;
+      box-shadow: 0 0 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .shape-one {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, #ff1744, #b71c1c);
+      top: -120px;
+      left: -120px;
+      box-shadow: 0 0 120px rgba(255, 23, 68, 0.5), 0 0 160px rgba(183, 28, 28, 0.4);
+    }
+
+    .shape-two {
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, #880e4f, #000000);
+      bottom: -100px;
+      right: -100px;
+      box-shadow: 0 0 100px rgba(136, 14, 79, 0.4), 0 0 160px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Layout */
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      padding: 40px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    /* Title inside container */
+.container h1 {
+  font-size: 42px;
+  font-weight: 700;
+  text-align: center;
+  color: #ff5252;
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(255, 82, 82, 0.7),
+               0 0 30px rgba(255, 0, 0, 0.4);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* Glowing pulse animation */
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 82, 82, 0.6),
+                 0 0 30px rgba(255, 0, 0, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(255, 82, 82, 1),
+                 0 0 50px rgba(255, 0, 0, 0.8);
+    transform: scale(1.05);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 82, 82, 0.6),
+                 0 0 30px rgba(255, 0, 0, 0.3);
+    transform: scale(1);
+  }
+}
+
+
+    /* Stopwatch Display */
+    .stopwatch {
+      font-size: 80px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #ff5252;
+      text-shadow: 0 0 20px rgba(255, 82, 82, 0.6);
+    }
+
+    /* Buttons */
+    .controls {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .btn-play {
+      background: #00e676;
+      color: #000;
+    }
+    .btn-play:hover {
+      background: #1de9b6;
+      transform: scale(1.05);
+    }
+
+    .btn-stop {
+      background: #ff1744;
+      color: #fff;
+    }
+    .btn-stop:hover {
+      background: #ff5252;
+      transform: scale(1.05);
+    }
+
+    .btn-reset {
+      background: #424242;
+      color: #fff;
+    }
+    .btn-reset:hover {
+      background: #616161;
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 14px;
+      color: #fff;
+      z-index: 10;
+    }
+
+    .footer span {
+      color: #ff5252;
+      font-weight: 600;
+    }

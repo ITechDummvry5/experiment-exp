@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FormValidation</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <!-- Decorative shapes -->
+  <div class="shape-one"></div>
+  <div class="shape-two"></div>
+
+  <!-- Wrapper -->
+  <div class="container">
+    <!-- Header -->
+    <div class="header" id="feedback">
+      <img src="images/airplane.png" alt="App Logo" class="header-icon" id="feedbackImage">
+    </div>
+
+<!-- Form -->
+<form class="form" id="contactForm">
+  <h2>Contact Us</h2>
+
+  <div class="input-group">
+    <label>Full Name</label>
+    <input type="text" id="fullname" placeholder="Enter your name" >
+    <span class="error">Full name is required</span>
+  </div>
+
+  <div class="input-group">
+    <label>Phone No.</label>
+    <input type="tel" id="phone" placeholder="123 456 7890" >
+    <span class="error">Phone number is required</span>
+  </div>
+
+  <div class="input-group">
+    <label>Email Id</label>
+    <input type="email" id="email" placeholder="Enter Email" >
+    <span class="error">Valid email is required</span>
+  </div>
+
+  <div class="input-group">
+    <label>Your Message</label>
+    <textarea id="message" rows="3" placeholder="Enter your message" ></textarea>
+    <span class="error">Message cannot be empty</span>
+  </div>
+
+  <button type="submit" class="submit-btn">Submit</button>
+</form>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">Made by <span>TechDummvry!</span></div>
+
+  <!-- JS -->
+  <script src="js/script.js"></script>
+</body>
+</html>

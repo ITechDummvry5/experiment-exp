@@ -1,0 +1,272 @@
+/* ===================== Reset ===================== */
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Arial', 'Verdana', sans-serif;
+    box-sizing: border-box;
+}
+
+/* Hide scrollbar for all browsers */
+body{
+    overflow: auto; /* enable scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+        font-weight: 400;
+    font-style: normal;
+}
+
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* ===================== Variables ===================== */
+:root {
+    --bg-dark: #0B0F14;
+    --bg-dark-2: #1A222B;
+    --neon-cyan: #19E0FF;
+    --neon-magenta: #E91E63;
+    --neon-red: #FF1744;
+    --light-cyan: #E0F7FA;
+}
+
+/* ===================== Container ===================== */
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--light-cyan);
+    background: url(../images/BG.png) center / cover no-repeat;
+}
+
+/* ===================== Navbar ===================== */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 7%;
+    z-index: 10;
+}
+
+/* Logo */
+.logo {
+    height: 40px;
+    cursor: pointer;
+}
+
+/* Right Section */
+.nav-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 22px 14px 48px;
+}
+
+/* Polygon background for sign-in area */
+.nav-right::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(233, 30, 99, 0.35),
+        rgba(25, 224, 255, 0.35)
+    );
+    backdrop-filter: blur(6px);
+    clip-path: polygon(34px 0, 100% 0, 100% 100%, 0 100%);
+    border: 1px solid rgba(25, 224, 255, 0.35);
+    border-radius: 8px;
+    z-index: -1;
+}
+
+/* Links */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 16px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--light-cyan);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.25s ease;
+}
+
+.nav-links a:hover {
+    color: var(--neon-magenta);
+}
+
+/* Divider */
+.divider {
+    color: var(--light-cyan);
+    opacity: 0.6;
+}
+
+/* Sign-in button */
+.signin-btn {
+    background: var(--neon-cyan);
+    color: var(--bg-dark);
+    padding: 7px 20px;
+    border-radius: 50px;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 14px rgba(25, 224, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.signin-btn:hover {
+    background: var(--neon-magenta);
+    box-shadow: 0 0 18px rgba(233, 30, 99, 0.7);
+    color: var(--light-cyan);
+}
+
+/* ===================== Hero Section ===================== */
+.hero {
+    position: relative; /* IMPORTANT for coin list */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 60px 7%;
+    gap: 20px;
+}
+
+.hero-left {
+    flex: 1;
+}
+
+.hero-left h1 {
+    font-size: clamp(28px, 6vw, 48px);
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.hero-left h1 span {
+    color: var(--neon-cyan);
+}
+
+.hero-left p {
+    font-size: clamp(12px, 1.5vw, 16px);
+    margin: 20px 0;
+    opacity: 0.8;
+}
+
+.hero-btn {
+    background: var(--neon-magenta);
+    color: var(--light-cyan);
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 14px rgba(233, 30, 99, 0.6);
+    transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+    background: var(--neon-cyan);
+    color: var(--bg-dark);
+    box-shadow: 0 0 18px rgba(25, 224, 255, 0.7);
+}
+
+.hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-right img {
+    max-width: 100%;
+    max-height: 65vh;
+    object-fit: contain;
+}
+
+/* ===================== Coin List (BOTTOM OF HERO) ===================== */
+.coin-list {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 5;
+}
+.coin {
+    position: relative;
+    display: flex;           /* keep image on left, text on right */
+    align-items: center;
+    gap: 12px;
+    padding: 10px 22px;
+    cursor: pointer;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.coin:hover {
+    transform: translateY(-3px);
+}
+
+/* Coin polygon stays the same */
+.coin::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(233, 30, 99, 0.35),
+        rgba(25, 224, 255, 0.35)
+    );
+    backdrop-filter: blur(6px);
+    clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%);
+    border: 1px solid rgba(25, 224, 255, 0.35);
+    border-radius: 8px;
+    z-index: -1;
+}
+
+.coin img {
+    width: 30px;
+    height: 30px;
+}
+
+.coin-info {
+    display: flex;
+    flex-direction: column;  /* stack title and price vertically */
+    gap: 2px;
+}
+
+.coin-name {
+    font-weight: 700;
+    color: var(--light-cyan);
+    font-size: 14px;
+}
+
+.coin-price {
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--neon-cyan);
+}
+
+
+/* ===================== Responsive ===================== */
+@media (max-width: 900px) {
+    .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+        padding: 30px 20px 160px;
+    }
+
+    .coin-list {
+        bottom: 20px;
+    }
+}
+

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Destroyer Son Hak</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="profile-wrapper">
+    <div class="profile-card">
+
+      <div class="profile-top">
+        <div class="profile-pic" id="profilePic" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+          <p>Profile</p>
+          <img id="profileImg" src="" alt="Profile" style="display:none;" />
+        </div>
+
+        <div class="profile-info">
+          <h1 contenteditable="true">Character Name</h1>
+          <p contenteditable="true">Short description or tagline about the character.</p>
+        </div>
+
+        <!--  Right-side logo slot -->
+        <div class="profile-logo" id="profileLogo" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+          <p>Logo</p>
+          <img id="logoImg" src="" alt="Logo" style="display:none;" />
+        </div>
+      </div>
+
+      <div class="skills-list">
+        <div class="skill" id="passiveSkill" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+          <div class="skill-image">
+            <p>Passive</p>
+            <img id="passiveImg" src="" alt="Passive Skill" style="display:none;" />
+          </div>
+          <div class="skill-content">
+            <h3 contenteditable="true">Passive</h3>
+            <p contenteditable="true">Description of the passive ability goes here.</p>
+          </div>
+        </div>
+
+        <div class="skill" id="skill1" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+          <div class="skill-image">
+            <p>Skill 1</p>
+            <img id="skill1Img" src="" alt="Skill 1" style="display:none;" />
+          </div>
+          <div class="skill-content">
+            <h3 contenteditable="true">Skill 1</h3>
+            <p contenteditable="true">Description of Skill 1 goes here.</p>
+          </div>
+        </div>
+
+        <div class="skill" id="skill2" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+          <div class="skill-image">
+            <p>Skill 2</p>
+            <img id="skill2Img" src="" alt="Skill 2" style="display:none;" />
+          </div>
+          <div class="skill-content">
+            <h3 contenteditable="true">Skill 2</h3>
+            <p contenteditable="true">Description of Skill 2 goes here.</p>
+          </div>
+        </div>
+
+        <div class="skill" id="skill3" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+          <div class="skill-image">
+            <p>Skill 3</p>
+            <img id="skill3Img" src="" alt="Skill 3" style="display:none;" />
+          </div>
+          <div class="skill-content">
+            <h3 contenteditable="true">Skill 3</h3>
+            <p contenteditable="true">Description of Skill 3 goes here.</p>
+          </div>
+        </div>
+
+        <div class="skill" id="skill4" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+          <div class="skill-image">
+            <p>Skill 4</p>
+            <img id="skill4Img" src="" alt="Skill 4" style="display:none;" />
+          </div>
+          <div class="skill-content">
+            <h3 contenteditable="true">Skill 4</h3>
+            <p contenteditable="true">Description of Skill 4 goes here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

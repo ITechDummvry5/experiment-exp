@@ -1,0 +1,134 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.container{
+    width: 100%;
+    min-height: 100vh;
+    background-color: rgb(13, 13, 32);
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;   /* ← THIS is what you want */
+}
+
+/* Title */
+.container h1{
+    font-size: 3rem;
+}
+
+/* Form */
+form{
+    display: flex;
+    width: 90%;
+    max-width: 600px;
+    gap: 12px;
+    background: rgba(255,255,255,0.08);
+    padding: 12px;
+    border-radius: 12px;
+}
+/* Search Button */
+form button{
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+form button img{
+    width: 30px;
+    transition: transform 0.4s ease;
+}
+
+/* Hover effect */
+form button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.5);
+}
+
+/* Rotate while clicking */
+form button:active img{
+    transform: rotate(360deg);
+}
+
+/* Optional focus */
+form button:focus{
+    outline: none;
+}
+form input{
+    flex: 1;                 /* ← fills remaining space */
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+/* Search Button */
+#show-more-btn{
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: none;
+
+}
+/* Hover effect */
+#show-more-btn:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.5);
+}
+
+/* Search Results Grid */
+.search-result {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 16px; /* space between items */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto; /* center the grid */
+}
+
+/* Each image container */
+.search-item img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    height: 200px; /* fixed height for Bento style */
+    transition: transform 0.3s ease;
+}
+
+.search-item img:hover {
+    transform: scale(1.05); /* slight zoom on hover */
+}
+@media (max-width: 1024px) {
+    .search-result {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .search-result {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .search-result {
+        grid-template-columns: 1fr;
+    }
+}

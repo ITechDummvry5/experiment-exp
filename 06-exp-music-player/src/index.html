@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Player App</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/3cff0df57f.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="shape-one"></div>
+  <div class="shape-two"></div>
+
+  <div class="container">
+    <div class="music-player">
+      <nav>
+        <div class="circle"><i class="fa-solid fa-angle-left"></i></div>
+        <div class="circle"><i class="fa-solid fa-bars"></i></div>
+      </nav>
+
+      <img src="images/Billie_Eilish.webp" class="song-img" id="songImg">
+      <h1 id="songTitle">Song Title</h1>
+      <p id="songArtist">Song Artist</p>
+
+      <audio id="song">
+        <source src="images/BIRDS OF A FEATHER - Billie Eilish.mp3" type="audio/mp3">
+      </audio>
+
+      <input type="range" value="0" id="progress">
+
+      <div class="control">
+        <div id="prev"><i class="fa-solid fa-backward"></i></div>
+        <div onclick="playPause()"><i class="fa-solid fa-pause" id="ctrIcon"></i></div>
+        <div id="next"><i class="fa-solid fa-forward"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Made by <span>TemplateName</span></div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
