@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Particle Trails</title>
+<style>
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{background:#000;overflow:hidden}
+</style>
+</head>
+
+<!--
+  USAGE: add data-particles to ANY element (body, a card, a hero...).
+  Press and drag on it to spray particles and trailing lines. An intro animation plays once on load.
+  No libraries needed (replaces Pixi, CreateJS and Stats).
+
+    <body data-particles>
+    <div class="card" data-particles>...</div>   (give the card a height)
+
+  OPTIONS (all optional):
+    data-particles-lines="800"     number of trailing lines (more = denser, slower)
+    data-particles-intro="false"   skip the opening animation
+
+  TO COPY: take the <script> block at the bottom. Nothing else is required.
+-->
+
+<body data-particles>
+
+<!-- ===================== PARTICLE TRAILS (copy from here) ===================== -->
+<script>
+(() => {
+  const EMIT = 10, MAX_P = 3000, SPRITES = 80, rnd = Math.random;
+  let atlas = null;
+
+  /* particle textures, drawn once */
+  function makeAtlas() {
+    const out = [];
+    for (let i = 0; i < SPRITES; i++) {
+      const size = rnd() * rnd() * rnd() * 120 + 4, d = Math.ceil(size * 2) + 12;
+      const c = document.createElement('canvas'); c.width = c.height = d;
+      const x = c.getContext('2d'); x.translate(d / 2, d / 2);
+      const col = `hsl(${160 + 20 * rnd()},${rnd() * 20}%,${50 + rnd() * 50}%)`;
+      const stroke = () => { x.lineWidth = 2; x.strokeStyle = '#fff'; x.stroke(); };
+      const fill = () => { x.fillStyle = col; x.fill(); };
+      x.beginPath();
+      if (rnd() < .7) {
+        x.arc(0, 0, size, 0, 7);
+        if (rnd() < .3) {                       // soft blob
+          const g = x.createRadialGradient(0, 0, size / 10, 0, 0, size);
+          g.addColorStop(0, col); g.addColorStop(1, '#000'); x.fillStyle = g; x.fill();
+        } else if (rnd() < .5) fill(); else stroke();
+      } else if (rnd() < .5) {
+        x.rect(-size, -size, size * 2, size * 2); rnd() < .1 ? fill() : stroke();
+      } else {
+        const h = size * Math.sin(Math.PI / 3);
+        x.moveTo(-size / 2, size / 2); x.lineTo(0, size / 2 - h); x.lineTo(size / 2, size / 2); x.closePath();
+        rnd() < .5 ? fill() : stroke();
+      }
+      out.push(c);
+    }
+    return out;
+  }
+
+  const ease = t => t < .5 ? 8 * t ** 4 : 1 - 8 * (1 - t) ** 4;   // quartInOut
+
+  function mount(el) {
+    if (el.__particles) return;
+    el.__particles = true;
+    atlas = atlas || makeAtlas();
+
+    const isRoot = el === document.body || el === document.documentElement;
+    const LINES = +(el.dataset.particlesLines || 800);
+    const intro = el.dataset.particlesIntro !== 'false';
+
+    const cv = document.createElement('canvas');
+    cv.setAttribute('aria-hidden', 'true');
+    cv.style.cssText = `position:${isRoot ? 'fixed' : 'absolute'};inset:0;width:100%;height:100%;` +
+      'z-index:-1;display:block;pointer-events:none;border-radius:inherit';
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.style.isolation = 'isolate';
+    el.style.touchAction = 'none';
+    el.style.cursor = 'crosshair';
+    if (!isRoot) el.style.overflow = el.style.overflow || 'hidden';
+    el.prepend(cv);
+
+    const ctx = cv.getContext('2d');
+    const tc = document.createElement('canvas'), tx = tc.getContext('2d');   // fading line trails
+    let W = 1, H = 1, vig;
+
+    function resize() {
+      W = cv.width = tc.width = Math.max(1, isRoot ? innerWidth : el.clientWidth);
+      H = cv.height = tc.height = Math.max(1, isRoot ? innerHeight : el.clientHeight);
+      vig = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .25, W / 2, H / 2, Math.max(W, H) * .75);
+      vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(1, 'rgba(0,0,0,.6)');
+    }
+    resize();
+    if (isRoot) addEventListener('resize', resize); else new ResizeObserver(resize).observe(el);
+
+    /* emitter (spring toward the pointer) */
+    const em = { x: W / 2, y: H / 2, vx: 0, vy: 0, lx: W / 2, ly: H / 2, ang: 0, vang: 0 };
+    let down = false, introOn = intro, introStart = 0, seg = 0, seq = [], segDur = [];
+    const hist = [];
+
+    /* trailing followers */
+    const paths = Array.from({ length: LINES }, (_, i) => ({
+      ac: .3 + i / LINES * .5, delay: 180 * rnd() >> 0, pct: (i + 1) / LINES,
+      pvx: 40 * ((rnd() + rnd() + rnd()) / 3 - .5) >> 0, pvy: 40 * ((rnd() + rnd() + rnd()) / 3 - .5) >> 0,
+      x: W / 2, y: H / 2, vx: 0, vy: 0,
+      p0: { x: W / 2, y: H / 2 }, p1: { x: W / 2, y: H / 2 }, p2: { x: W / 2, y: H / 2 }
+    }));
+    const parts = [];
+
+    /* opening animation: a pentagram drawn twice */
+    if (intro) {
+      const r = Math.min(W, H) / 3;
+      const pt = a => ({ x: W / 2 + r * Math.cos(a / 180 * Math.PI), y: H / 2 + r * Math.sin(a / 180 * Math.PI) });
+      const star = [-90, -234, -18, -162, -306].map(pt);
+      seq = [star[4], ...star, ...star];
+      segDur = seq.map(() => 250 + 100 * rnd());
+      em.lx = em.x = star[0].x; em.ly = em.y = star[0].y;
+      down = true;
+      introStart = performance.now();
+    }
+
+    /* pointer */
+    const target = isRoot ? window : el;
+    const pos = e => { const r = isRoot ? { left: 0, top: 0 } : el.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    target.addEventListener('pointerdown', e => {
+      if (introOn) return;
+      [em.x, em.lx] = [pos(e)[0], pos(e)[0]]; [em.y, em.ly] = [pos(e)[1], pos(e)[1]];
+      down = true;
+    });
+    target.addEventListener('pointermove', e => { if (introOn) return; [em.lx, em.ly] = pos(e); });
+    addEventListener('pointerup', () => { if (!introOn) down = false; });
+    addEventListener('pointercancel', () => { if (!introOn) down = false; });
+
+    function frame(now) {
+      /* intro drives the pointer */
+      if (introOn) {
+        let t = now - introStart;
+        while (seg < seq.length - 1 && t > segDur[seg + 1]) { t -= segDur[seg + 1]; seg++; }
+        if (seg >= seq.length - 1) { introOn = false; down = false; }
+        else {
+          const a = seq[seg], b = seq[seg + 1], k = ease(Math.min(1, t / segDur[seg + 1]));
+          em.lx = a.x + (b.x - a.x) * k; em.ly = a.y + (b.y - a.y) * k;
+        }
+      }
+
+      /* emit */
+      if (down && parts.length < MAX_P) {
+        for (let i = 0; i < EMIT; i++) parts.push({
+          s: atlas[rnd() * SPRITES >> 0], x: em.x, y: em.y,
+          vx: em.vx * .5 + (rnd() - .5) * 10, vy: em.vy * .5 + (rnd() - .5) * 10,
+          life: rnd() * rnd() * 300 + 30, n: 0, rot: 360 * rnd(), vr: em.vang
+        });
+      }
+
+      /* pointer history -> followers */
+      hist.unshift({ x: em.lx, y: em.ly, down });
+      if (hist.length > 200) hist.pop();
+      for (const p of paths) {
+        if (hist.length <= p.delay) continue;
+        const h = hist[p.delay], mx = h.x + p.pvx, my = h.y + p.pvy;
+        p.p2.x = p.p1.x; p.p2.y = p.p1.y; p.p1.x = p.p0.x; p.p1.y = p.p0.y;
+        if (!h.down) {                       // released: collapse onto the pointer
+          p.x = p.p0.x = p.p1.x = p.p2.x = mx; p.y = p.p0.y = p.p1.y = p.p2.y = my; p.vx = p.vy = 0;
+        } else {
+          p.vx += (mx - p.x) * p.ac; p.vy += (my - p.y) * p.ac;
+          p.x += p.vx; p.y += p.vy; p.vx *= .85; p.vy *= .85;
+          p.p0.x = p.x; p.p0.y = p.y;
+        }
+      }
+
+      /* fading line trails */
+      tx.globalCompositeOperation = 'destination-out';
+      tx.fillStyle = 'rgba(0,0,0,.08)';
+      tx.fillRect(0, 0, W, H);
+      tx.globalCompositeOperation = 'source-over';
+      tx.lineWidth = 1;
+      for (const p of paths) {
+        const { p0, p1, p2 } = p;
+        if (p0.x === p2.x || p0.y === p2.y || p0.x === p1.x || p0.y === p1.y) continue;
+        tx.strokeStyle = `rgba(255,255,255,${p.pct.toFixed(2)})`;
+        tx.beginPath();
+        tx.moveTo((p2.x + p1.x) / 2, (p2.y + p1.y) / 2);
+        tx.quadraticCurveTo(p1.x, p1.y, (p0.x + p1.x) / 2, (p0.y + p1.y) / 2);
+        tx.stroke();
+      }
+
+      /* emitter physics */
+      const dx = em.lx - em.x, dy = em.ly - em.y, d = Math.hypot(dx, dy) * .2, rad = Math.atan2(dy, dx);
+      em.vx = (em.vx + Math.cos(rad) * d) * .4; em.vy = (em.vy + Math.sin(rad) * d) * .4;
+      em.x += em.vx; em.y += em.vy; em.vang = rad - em.ang; em.ang = rad;
+
+      /* background: slowly cycling hue */
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const h1 = now / 40, g = ctx.createLinearGradient(0, 0, 0, H);
+      for (let i = 0; i <= 3; i++) {
+        const f = i / 3;
+        g.addColorStop(f, `hsl(${(h1 + 89 * (1 - f)) % 360},${70 - 40 * f}%,${70 - 30 * f}%)`);
+      }
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+      /* particles */
+      ctx.globalCompositeOperation = 'screen';
+      let live = 0;
+      for (const p of parts) {
+        p.vy += .2; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.n++;
+        if (p.y >= H) { p.vy *= -.9; p.y = H; } else if (p.y <= 0) { p.vy *= -.9; p.y = 0; }
+        if (p.x >= W) { p.vx *= -.9; p.x = W; } else if (p.x <= 0) { p.vx *= -.9; p.x = 0; }
+        if (p.n > p.life) continue;
+        const k = 1 - p.n / p.life / 3, c = Math.cos(p.rot) * k, s = Math.sin(p.rot) * k;
+        ctx.globalAlpha = Math.min(1, rnd() * .4 + .6 * p.n / p.life);
+        ctx.setTransform(c, s, -s, c, p.x, p.y);
+        ctx.drawImage(p.s, -p.s.width / 2, -p.s.height / 2);
+        parts[live++] = p;
+      }
+      parts.length = live;
+
+      /* line trails + vignette */
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.drawImage(tc, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+    }
+
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { introOn = false; down = false; frame(0); return; }
+
+    /* run only while visible */
+    let raf = 0, running = false, inView = true;
+    const loop = t => { if (!running) return; frame(t); raf = requestAnimationFrame(loop); };
+    const sync = () => {
+      const want = inView && !document.hidden;
+      if (want && !running) { running = true; raf = requestAnimationFrame(loop); }
+      else if (!want && running) { running = false; cancelAnimationFrame(raf); }
+    };
+    new IntersectionObserver(e => { inView = e[0].isIntersecting; sync(); }).observe(el);
+    document.addEventListener('visibilitychange', sync);
+    sync();
+  }
+
+  const init = () => document.querySelectorAll('[data-particles]').forEach(mount);
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+})();
+</script>
+<!-- ===================== PARTICLE TRAILS (copy to here) ===================== -->
+
+</body>
+</html>
